@@ -106,4 +106,7 @@ chroot환경을 빠져나올 수 있다.
 sudo umount /ubuntu-rootfs
 ```
 
+## 파일 굽기
+-> root.sh / rootfs.img / root.iso 
+
 
