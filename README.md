@@ -152,7 +152,12 @@ iso_file="my_combined_image.iso"
 ```bush
 temp_dir="$(mktemp -d)"
 ```
-ISO 이미지 생성을 위한 임시 디렉토리 생성
+ISO 이미지 생성을 위한 임시 디렉토리 생성<br>
+>임시 디렉토리를 생성하는 이유는 여러가지 있다.
+>1. 안전한 작업 환경을 만들기 위해. 임시 디렉토리를 사용하면 파일을 합칠 때 원본파일이나 대상 파일이 손상되지 않도록 보호할 수 있다. 원본 파일을 직접 수정하는 대신 디렉토리에 복사하고 작업을 수행한 후 원본 파일을 변경하는 것이 안전하다고 볼 수 있다.<br>
+>2. 원본 파일을 유지하기 위해. 임시 디렉토리를 사용하면 원본 파일을 보존하고 변경 사항을 임시로 저장할 수 있다.<br>
+>3. 임시 디렉토리를 사용하면 파일 합치기 작업을 트랜잭션`데이터베이스 시스템에서 병행 제어 및 회복 작업 시 처리되는 작업의 논리적인 단위로 사용자가 시스템에 대한 서비스 요구 시 시스템이 응답하기 위한 상태 변환 과정의 작업 단위이다.` 방식으로 처리할 수 있다. 작업이 완료되면 임시 디렉토리로 이동하거나 복사하여 합칠 수 있다.<br>
+>4. 충돌을 방지하기 위해. 임시 디렉토리는 일시적으로 생성되는 고유한 이름을 가지고 있으므로 다른 작업이나 스크립트와의 이름 충돌을 방지할 수 있다. <br>
 ```bush
 cp "$work_dir/root.iso" "$temp_dir/"
 ```
@@ -184,6 +189,45 @@ echo "ISO 이미지 생성이 완료되었습니다: $iso_file"
 2. 디버깅 - 스크립트를 디버그 할 때 해당 지점까지 실행되었는지 확인하는 데 도움을 줄 수 있다. 생성된 ISO파일 경로를 확인하거나 추적할 때 유용하게 적용된다.
 <br>
 
-## 오류해결 
+## 디버깅 작업
+
+qmue로 실행을 할 때 bzimage를 커널로 선택해야 한다. -> qmue를 실행할 때의 요소.<br>
+`qemu-system-x86_64`로 실행을 할 때 커널 부분으로 선택해야 함<br>
+> 구운 파일에 bzimage를 넣는 것이 아님.
+
+#### 환경 설정하기
+- host는 Ubuntu 18.04<br>
+- guest는 Linux kernel 4.7 -> qemu 이용<br>
+```bush
+sudo apt-get install qemu qemu-system
+```
+qemu와 qemu-system 패키지를 설치하기 위한 명령어
+````bush
+git clone https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux
+```
+Linux 커널 소스 코드를 복제하는 명령어
+```bush
+git checkout v4.7
+```
+Git 저장소에서 특정 버전 또는 브랜치로 전환하는 명령어
 
 
+## 오류해결 (시간관계상 미완성,,)
+```bush
+qemu-kvm: command not found
+```
+`sudo apt-get install qemu-kvm`<br>
+`sudo modprobe kvm`<br>
+`qemu-system-x86_64 -name my-vm -machine pc-i440fx-2.9 -m 2048 -drive file=vm-disk.img,format=qcow2 -cpu host -nographic -daemonize -monitor tcp:127.0.0.1:12345,server,nowait`<br>
+
+```bush
+qemu-system-x86_64: -drive file=host-vm-disk.img,format=qcow2: Could not open 'host-vm-disk.img': No such file or directory
+```
+`qemu-img create -f qcow2 host-vm-disk.img 10G`<br>
+`qemu-system-x86_64 \`<br>
+`    -name host-vm \`<br>
+`    -cpu host \`<br>
+`    -m 2048 \`<br>
+`    -drive file=host-vm-disk.img,format=qcow2 \`<br>
+`    -monitor tcp:127.0.0.1:12345,server,nowait`<br>
+--호스트 가상머신 설정<br>
