@@ -231,3 +231,8 @@ qemu-system-x86_64: -drive file=host-vm-disk.img,format=qcow2: Could not open 'h
 `    -drive file=host-vm-disk.img,format=qcow2 \`<br>
 `    -monitor tcp:127.0.0.1:12345,server,nowait`<br>
 --호스트 가상머신 설정<br>
+
+## 피드백 후 수정
+
+
+
