@@ -198,29 +198,29 @@ qmue로 실행을 할 때 bzimage를 커널로 선택해야 한다. -> qmue를 �
 #### 환경 설정하기
 - host는 Ubuntu 18.04<br>
 - guest는 Linux kernel 4.7 -> qemu 이용<br>
-```bush
+```bash
 sudo apt-get install qemu qemu-system
 ```
 qemu와 qemu-system 패키지를 설치하기 위한 명령어
-````bush
+```bash
 git clone https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux
 ```
 Linux 커널 소스 코드를 복제하는 명령어
-```bush
+```bash
 git checkout v4.7
 ```
 Git 저장소에서 특정 버전 또는 브랜치로 전환하는 명령어
 
 
 ## 오류해결 (시간관계상 미완성,,)
-```bush
+```bash
 qemu-kvm: command not found
 ```
 `sudo apt-get install qemu-kvm`<br>
 `sudo modprobe kvm`<br>
 `qemu-system-x86_64 -name my-vm -machine pc-i440fx-2.9 -m 2048 -drive file=vm-disk.img,format=qcow2 -cpu host -nographic -daemonize -monitor tcp:127.0.0.1:12345,server,nowait`<br>
 
-```bush
+```bash
 qemu-system-x86_64: -drive file=host-vm-disk.img,format=qcow2: Could not open 'host-vm-disk.img': No such file or directory
 ```
 `qemu-img create -f qcow2 host-vm-disk.img 10G`<br>
